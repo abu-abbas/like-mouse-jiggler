@@ -1,0 +1,14 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# macOS
+.DS_Store
+
+# Artefak release (dihasilkan CI)
+dist/
+dmg-root/
+*.dmg
+*.app.zip
