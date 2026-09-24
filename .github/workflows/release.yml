@@ -39,15 +39,20 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Baca versi dari Info.plist
+      - name: Cek tag = MARKETING_VERSION
         id: meta
         run: |
           APP="build/Build/Products/Release/$APP_NAME.app"
           test -d "$APP" || { echo "App bundle tidak ditemukan: $APP"; exit 1; }
           VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME tidak cocok dengan MARKETING_VERSION $VERSION. Samakan versi di Xcode, atau pakai tag v$VERSION."
+            exit 1
+          fi
           echo "path=$APP" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "App: $VERSION | Tag: $GITHUB_REF_NAME"
+          echo "App: $VERSION | Tag: $GITHUB_REF_NAME ✓"
 
       - name: Ad-hoc sign (tanpa akun Apple Developer)
         run: |

@@ -42,17 +42,20 @@ xcodebuild -project "Mouse Jiggler.xcodeproj" \
 
 Rilis dibuat otomatis oleh GitHub Actions (`.github/workflows/release.yml`) setiap kali tag `v*` di-push.
 
-1. Pastikan versi di Xcode (`MARKETING_VERSION`, sekarang `1.0`) sudah sesuai rencana rilis.
-2. Commit semua perubahan, lalu buat dan push tag:
+1. Tentukan versi rilis dengan SemVer (`MAJOR.MINOR.PATCH`) di Xcode → target **MouseJiggler** → Build Settings → **Versioning → Marketing Version** (`MARKETING_VERSION`). Sekarang `1.0.0`.
+2. Commit semua perubahan, lalu buat dan push tag dengan format `v` + versi itu persis:
 
 ```sh
-git tag v1.0
-git push origin v1.0
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
+> Workflow **gagal** kalau tag tidak sama dengan `MARKETING_VERSION` (misal tag `v2.0.0` tapi versi app masih `1.0.0`) — jadi nama file dan isi app tidak pernah bisa beda.
+> `CURRENT_PROJECT_VERSION` (build number) bebas, tidak dicek.
+
 3. Tunggu workflow **Release** selesai di tab Actions. Hasilnya jadi 2 asset di halaman **Releases**:
-   - `MouseJiggler-v1.0.dmg`
-   - `MouseJiggler-v1.0.app.zip`
+   - `MouseJiggler-v1.0.0.dmg`
+   - `MouseJiggler-v1.0.0.app.zip`
 
 Kalau tag yang sama di-push ulang, asset lama ditimpa (`gh release upload --clobber`).
 
@@ -60,7 +63,7 @@ Workflow-nya ada di `.github/workflows/release.yml` dan memakai `GITHUB_TOKEN` b
 
 ## Instalasi dari GitHub Releases
 
-1. Buka halaman **Releases**, unduh `MouseJiggler-vX.Y.dmg` (atau `.app.zip`).
+1. Buka halaman **Releases**, unduh `MouseJiggler-vX.Y.Z.dmg` (atau `.app.zip`).
 2. Buka `.dmg`, seret **Mouse Jiggler** ke folder **Applications**.
 3. Karena app di-sign ad-hoc (tanpa Apple Developer ID), Gatekeeper akan menolak app yang diunduh dari internet. Pilih salah satu:
    - Klik kanan app → **Open** → **Open** lagi, atau
@@ -107,7 +110,7 @@ MouseJiggler/
 | | |
 |---|---|
 | Bundle ID | `com.wibowo.mousejiggler` |
-| Versi | 1.0 |
+| Versi | 1.0.0 (SemVer, `MARKETING_VERSION`) |
 | Kategori | Utilities |
 | Deployment target | macOS 14.0 |
 | Sandbox | Nonaktif |
